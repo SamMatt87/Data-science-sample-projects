@@ -44,7 +44,7 @@ def to_words(raw_text):
 	words = lower_case.split()
 	stops = set(stopwords.words('english'))
 	meaningful_words = [w for w in words if not w in stops]
-	return (" ".join(meaningful_words))
+	return (",".join(meaningful_words))
 
 tagged_reduced = tagged[tagged.Code != 'N/A']
 print(tagged_reduced.head())
@@ -64,10 +64,14 @@ vectorizer = CountVectorizer(analyzer='word', tokenizer = None, stop_words=None,
 train_data_features = vectorizer.fit_transform(clean_q_train)
 #train_data_features = train_data_features.values()
 vocab = vectorizer.get_feature_names()
-print (train_data_features.shape)
-print(train_data_features)
-for i in range(0,num_qs):
-	print (train_data_features[i])
+dist=np.sum(train_data_features, axis=0)
+print(dist)
+for i in range(0,len(vocab)):
+	print(vocab[i],dist[0,i])
+#print (train_data_features.shape)
+#print(train_data_features)
+#for i in range(0,num_qs):
+	#print (train_data_features[i])
 clean_q_test=[]
 num_test_qs = x_test.size
 for i in range (0,num_test_qs):
@@ -78,7 +82,7 @@ for i in range (0,num_test_qs):
 		print('finished')
 test_data_features = vectorizer.transform(clean_q_test)
 #train_data_features = np.asarray(test_data_features)
-print(train_data_features.dtype)
+#print(train_data_features.dtype)
 clf = SVC(gamma='auto')
 clf.fit(train_data_features,y_train)
 y_predict = clf.predict(test_data_features)
