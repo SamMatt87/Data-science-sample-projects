@@ -1,6 +1,9 @@
 from sklearn.cluster import KMeans
 import pandas as pd 
 from sklearn.preprocessing import LabelEncoder
+import numpy as np
+from sklearn.metrics import accuracy_score
+from sklearn.preprocessing import MinMaxScaler
 data = pd.read_csv('WA_Fn-UseC_-Telco-Customer-Churn.csv')
 #print(data.head())
 X=data.iloc[:,1:20]
@@ -42,22 +45,28 @@ gender_label = LabelEncoder()
 gender_label.fit(X['gender'])
 X['Gender_label'] = gender_label.transform(X['gender'])
 
-#x_labeled = 
+X['TotalCharges_fill'] = X['TotalCharges'].replace(' ',0)
+print(X['TotalCharges_fill'].value_counts())
+ 
 x_labeled=X[['Gender_label','SeniorCitizen','Partner_labeled','Dependents_labeled',
 	'tenure','PhoneService_labeled','MultipleLines_label','InternetService_label',
 	'OnlineSecurity_label','OnlineBackup_label','DeviceProtection_label','TechSupport_label',
 	'StreamingTV_label','StreamingMovies_label','Contract_label','PaperlessBilling_labeled',
-	'PaymentMethod_label','MonthlyCharges','TotalCharges']]
-print(X.head())
+	'PaymentMethod_label','MonthlyCharges','TotalCharges_fill']]
+scaler = MinMaxScaler()
+x_scaled = scaler.fit_transform(x_labeled)
+#print(x_scaled.dtypes)
 #print(X.head())
 #print(y_labeled)
 from sklearn.model_selection import train_test_split
-x_train, x_test, y_train, y_test = train_test_split(x_labeled,y_labeled,test_size=0.2)
+x_train, x_test, y_train, y_test = train_test_split(x_scaled,y_labeled,test_size=0.2)
 #print(x_train)
 #print(y_train)
 from sklearn.cluster import KMeans
-kmeans = KMeans(n_clusters=2, random_state=0)
+kmeans = KMeans(n_clusters=2, n_init = 50, max_iter = 1000)
 kmeans.fit(x_train,y_train)
-kmeans.labels_
-y_predict=kmeans.preict(test_x)
-kmeans.cluster_centers_
+print(kmeans.labels_)
+y_predict=kmeans.predict(x_test)
+print(kmeans.cluster_centers_)
+score = accuracy_score(y_test,y_predict)
+print(score)
