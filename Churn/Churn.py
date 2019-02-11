@@ -55,7 +55,7 @@ x_labeled=X[['Gender_label','SeniorCitizen','Partner_labeled','Dependents_labele
 	'PaymentMethod_label','MonthlyCharges','TotalCharges_fill']]
 scaler = MinMaxScaler()
 x_scaled = scaler.fit_transform(x_labeled)
-#print(x_scaled.dtypes)
+print(x_scaled)
 #print(X.head())
 #print(y_labeled)
 from sklearn.model_selection import train_test_split
