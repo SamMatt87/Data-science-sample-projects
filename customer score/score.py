@@ -12,8 +12,8 @@ X=data.iloc[:,1:-1]
 Y=data['Spending Score (1-100)']
 print(Y)
 xtrain,xtest,ytrain,ytest = train_test_split(X,Y,test_size=0.2)
-params = {'n_estimators': 500, 'max_depth': 4, 'min_samples_split': 2,
-          'learning_rate': 0.01, 'loss': 'ls'}
+params = {'n_estimators': 500, 'max_depth': 10, 'min_samples_split': 2,
+          'learning_rate': 0.01, 'loss': 'quantile'}
 clf = GradientBoostingRegressor(**params)
 clf.fit(xtrain,ytrain)
 mse = mean_squared_error(ytest,clf.predict(xtest))
