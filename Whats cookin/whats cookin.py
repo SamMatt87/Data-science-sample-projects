@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-import re
 from sklearn.model_selection import train_test_split
 from sklearn import tree
 print('reading data')
@@ -37,10 +36,11 @@ Groot = tree.DecisionTreeClassifier(max_depth = 50)
 Groot.fit(x_counts_df,Y_train)
 Groot.score(x_counts_df,Y_train)
 print('calculating error')
-Groot_predict = Groot.predict(X_test)
+x_counts_test_df = pd.DataFrame(CV.transform(X_test).toarray(),columns=CV.get_feature_names())
+Groot_predict = Groot.predict(x_counts_test_df)
 Groot_Error = 0
 for i in range(0,len(Y_test)):
-	if Y_test[i]!=Groot_predict[i]:
+	if Y_test.values[i]!=Groot_predict[i]:
 		Groot_Error += 1
 print('Errors:',Groot_Error)
 Accuracy = ((len(Y_test)-Groot_Error)/len(Y_test))*100
